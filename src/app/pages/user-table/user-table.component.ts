@@ -3,6 +3,7 @@ import {User} from '../../models/user.model';
 import {UserService} from '../../sevices/user.service';
 import {Observable} from 'rxjs';
 import {MVContext} from '../../models/mv-context.model';
+import {UserIdService} from '../../sevices/user-id.service';
 
 @Component({
     selector: 'app-user-table',
@@ -67,7 +68,8 @@ export class UserTableComponent implements OnInit {
 
     usersContext$: Observable<MVContext<User[]>>;
 
-    constructor(private userService: UserService) {
+    constructor(private userService: UserService,
+                private userIdService: UserIdService) {
     }
 
     ngOnInit(): void {
@@ -75,6 +77,6 @@ export class UserTableComponent implements OnInit {
     }
 
     userClick(userId: number) {
-        this.userService.choosePhoto(userId);
+        this.userIdService.setState(userId);
     }
 }

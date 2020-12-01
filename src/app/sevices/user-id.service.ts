@@ -4,17 +4,17 @@ import {Observable, ReplaySubject} from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class GeneralService {
+export class UserIdService {
 
   private userId$ = new ReplaySubject<number>(1);
 
   constructor() { }
 
-  setUserId(userId) {
+  setState(userId) {
     this.userId$.next(userId);
   }
 
-  getUSerId$(): Observable<number> {
+  getState(): Observable<number> {
     return this.userId$.asObservable();
   }
 }

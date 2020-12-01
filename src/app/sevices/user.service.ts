@@ -4,7 +4,6 @@ import {BehaviorSubject, Observable, of} from 'rxjs';
 import {User} from '../models/user.model';
 import {MVContext} from '../models/mv-context.model';
 import {catchError, map} from 'rxjs/operators';
-import {GeneralService} from './general.service';
 
 export const jsonPlaceHolderUrl = 'https://jsonplaceholder.typicode.com';
 export const userUrl = 'users';
@@ -16,7 +15,7 @@ export class UserService {
 
   private usersContext$ = new BehaviorSubject<MVContext<User[]>>(null);
 
-  constructor(private http: HttpClient, private generalService: GeneralService) {
+  constructor(private http: HttpClient) {
     this.load();
   }
 
@@ -41,10 +40,5 @@ export class UserService {
   getStore(): Observable<MVContext<User[]>> {
     return this.usersContext$.asObservable();
   }
-
-  choosePhoto(userId: number) {
-    this.generalService.setUserId(userId);
-  }
-
 
 }
