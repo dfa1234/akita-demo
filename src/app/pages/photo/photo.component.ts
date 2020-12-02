@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Photo} from '../../models/photo.model';
 
 @Component({
@@ -17,7 +17,8 @@ import {Photo} from '../../models/photo.model';
         .photo-title {
             font-size: 30px;
         }
-    `]
+    `],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PhotoComponent implements OnInit {
 
