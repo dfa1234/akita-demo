@@ -105,6 +105,11 @@
           }
         }
       }
-    }},
-  "defaultProject": "push-architecture"
+    }
+  },
+  "defaultProject": "push-architecture",
+  "cli": {
+    "analytics": "b119b8a7-57f9-4456-8484-fe7818498b6c",
+    "defaultCollection": "@datorama/akita"
+  }
 }

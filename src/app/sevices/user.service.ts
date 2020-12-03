@@ -1,25 +1,21 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../models/user.model';
-import {AbstractStoreService} from './abstract-store.service';
-import {MVContext} from '../models/mv-context.model';
-import {UserIdService} from './user-id.service';
+import {UsersState, UsersStore} from "../stores/users.store";
+import {Query} from "@datorama/akita";
 
 export const jsonPlaceHolderUrl = 'https://jsonplaceholder.typicode.com';
 export const userUrl = 'users';
 
 @Injectable()
-export class UserService extends AbstractStoreService<User[]> {
+export class UserService extends Query<UsersState> {
 
-    constructor(protected http: HttpClient, private userIdService: UserIdService) {
-        super(http, `${jsonPlaceHolderUrl}/${userUrl}`);
-        this.load();
-        this.getStore()
-            .subscribe((context: MVContext<User[]>) => {
-                if (context.data && !context.loading && !context.errorResponse) {
-                    const users = context.data;
-                    this.userIdService.setState(users[0].id);
-                }
+    constructor(protected http: HttpClient, private usersStore: UsersStore) {
+        super(usersStore)
+        this.http.get<User[]>(`${jsonPlaceHolderUrl}/${userUrl}`)
+            .subscribe((users) => {
+                this.usersStore.update({users});
             })
     }
+
 }

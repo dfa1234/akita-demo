@@ -1,17 +1,16 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {User} from '../../models/user.model';
 import {UserService} from '../../sevices/user.service';
-import {Observable} from 'rxjs';
-import {MVContext} from '../../models/mv-context.model';
-import {UserIdService} from '../../sevices/user-id.service';
+import {UsersStore} from "../../stores/users.store";
 
 @Component({
     selector: 'app-user-table',
     template: `
-        <ng-container *ngIf="usersContext$ | async as userContext">
-            <div *ngIf="userContext.loading">...loading</div>
-            <div *ngIf="userContext.errorResponse">{{userContext.errorResponse.message}}</div>
-            <table class="table" *ngIf="userContext.data as users">
+        <!--        <ng-container *ngIf="usersContext$ | async as userContext">-->
+        <!--            <div *ngIf="userContext.loading">...loading</div>-->
+        <!--            <div *ngIf="userContext.errorResponse">{{userContext.errorResponse.message}}</div>-->
+        <!--            <table class="table" *ngIf="userContext.data as users">-->
+        <ng-container *ngIf="usersContext$ | async as users">
+            <table class="table">
                 <thead>
                 <tr>
                     <th>Name</th>
@@ -25,7 +24,8 @@ import {UserIdService} from '../../sevices/user-id.service';
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let user of users" (click)="userClick(user.id)" [class.selected]="(selectedUserId$ | async) === user.id">
+                <tr *ngFor="let user of users" (click)="userClick(user.id)"
+                    [class.selected]="(selectedUserId$ | async) === user.id">
                     <td>{{user.name}}</td>
                     <td>{{user.username}}</td>
                     <td>{{user.email}}</td>
@@ -56,7 +56,7 @@ import {UserIdService} from '../../sevices/user-id.service';
         tr {
             height: 50px;
         }
-        
+
         tr.selected {
             background-color: #f0f0f5;
 
@@ -69,22 +69,20 @@ import {UserIdService} from '../../sevices/user-id.service';
         }
     `],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [UserService]
+    providers: []
 })
 export class UserTableComponent implements OnInit {
 
-    usersContext$: Observable<MVContext<User[]>>;
-    selectedUserId$: Observable<number>;
+    usersContext$ = this.userService.select('users')
+    selectedUserId$ = this.userService.select('activeUserId')
 
-    constructor(private userService: UserService, private userIdService: UserIdService) {
+    constructor(private userService: UserService, private usersStore: UsersStore) {
     }
 
     ngOnInit(): void {
-        this.usersContext$ = this.userService.getStore();
-        this.selectedUserId$ = this.userIdService.getState();
     }
 
     userClick(userId: number) {
-        this.userIdService.setState(userId);
+        this.usersStore.update({activeUserId: userId})
     }
 }

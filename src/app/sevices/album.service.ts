@@ -1,23 +1,23 @@
 import {Injectable} from '@angular/core';
-import {Photo} from '../models/photo.model';
 import {HttpClient} from '@angular/common/http';
-import {AbstractStoreService} from './abstract-store.service';
-import {jsonPlaceHolderUrl} from './user.service';
-import {UserIdService} from './user-id.service';
+import {jsonPlaceHolderUrl, UserService} from './user.service';
+import {AlbumState, AlbumStore} from "../stores/album.store";
+import {Photo} from "../models/photo.model";
+import {Query} from "@datorama/akita";
 
 export const photosUrl = 'photos';
 
 @Injectable()
-export class AlbumService extends AbstractStoreService<Photo> {
+export class AlbumService extends Query<AlbumState> {
 
-    constructor(protected http: HttpClient, private userIdService: UserIdService) {
-        super(http);
-        this.userIdService.getState()
-            .subscribe((userId: number) => {
-                if (userId) {
-                    this.load(`${jsonPlaceHolderUrl}/${photosUrl}/${userId}`);
-                }
-            });
+    constructor(protected http: HttpClient, private albumStore: AlbumStore, private userService: UserService) {
+        super(albumStore);
+        this.userService.select('activeUserId').subscribe(userId => {
+            this.http.get<Photo>(`${jsonPlaceHolderUrl}/${photosUrl}/${userId}`)
+                .subscribe((album) => {
+                    this.albumStore.update({album})
+                })
+        })
     }
 
 }

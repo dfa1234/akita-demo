@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {UserIdService} from './sevices/user-id.service';
+import {UsersStore} from "./stores/users.store";
+import {AlbumStore} from "./stores/album.store";
+import {UserService} from "./sevices/user.service";
 
 @Component({
     selector: 'app-root',
@@ -8,7 +10,7 @@ import {UserIdService} from './sevices/user-id.service';
         <app-photo></app-photo>
     `,
     styles: [],
-    providers: [UserIdService]
+    providers: [UsersStore, AlbumStore, UserService]
 })
 export class AppComponent implements OnInit {
 

@@ -6,6 +6,10 @@ import {AppComponent} from './app.component';
 import {UserTableComponent} from './pages/user-table/user-table.component';
 import {HttpClientModule} from '@angular/common/http';
 import { PhotoComponent } from './pages/photo/photo.component';
+import { NG_ENTITY_SERVICE_CONFIG } from '@datorama/akita-ng-entity-service';
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
+import { environment } from '../environments/environment';
 
 @NgModule({
     declarations: [
@@ -16,9 +20,11 @@ import { PhotoComponent } from './pages/photo/photo.component';
     imports: [
         BrowserModule,
         AppRoutingModule,
-        HttpClientModule
+        HttpClientModule,
+        environment.production ? [] : AkitaNgDevtools.forRoot(),
+        AkitaNgRouterStoreModule.forRoot()
     ],
-    providers: [],
+    providers: [{ provide: NG_ENTITY_SERVICE_CONFIG, useValue: { baseUrl: 'https://jsonplaceholder.typicode.com' }}],
     bootstrap: [AppComponent]
 })
 export class AppModule {
